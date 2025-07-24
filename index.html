@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Warung Mama Cindy - Sembako Berkualitas</title>
+<style>
+  /* Reset & basics */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    color: #333;
+    overflow-x: hidden;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Iklan promo kecil atas */
+  #promoBanner {
+    background: #d43d3d;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 6px 12px;
+    position: sticky;
+    top: 0; z-index: 1500;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    animation: pulse 3s infinite alternate;
+  }
+  @keyframes pulse {
+    0% {opacity: 0.8;}
+    100% {opacity: 1;}
+  }
+
+  /* Header */
+  header {
+    background: #fff;
+    position: sticky;
+    top: 32px; /* bawah promo */
+    z-index: 1400;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  header div#brand {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #d43d3d;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+  .search-container {
+    flex-grow: 1;
+    max-width: 450px;
+    margin-left: 30px;
+  }
+  .search-container input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1.5px solid #d43d3d;
+    font-size: 1rem;
+    transition: box-shadow 0.3s ease;
+  }
+  .search-container input:focus {
+    outline: none;
+    box-shadow: 0 0 8px #d43d3d;
+  }
+
+  /* Navigasi kategori */
+  nav {
+    background: #fff;
+    margin: 20px auto 15px auto;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 8px 0;
+    border-radius: 50px;
+    box-shadow: 0 3px 15px rgba(212,61,61,0.25);
+    user-select: none;
+  }
+  nav button {
+    background: #f8f8f8;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #555;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  nav button:hover, nav button.active {
+    background: #d43d3d;
+    color: white;
+    box-shadow: 0 4px 12px rgba(212,61,61,0.7);
+    transform: scale(1.1);
+  }
+
+  /* Main content wrapper */
+  main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 15px 60px;
+  }
+
+  /* Grid produk */
+  #productGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    gap: 25px;
+    margin-bottom: 60px;
+  }
+  .product-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 14px rgb(0 0 0 / 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 14px 24px rgb(0 0 0 / 0.15);
+  }
+  .product-img-container {
+    position: relative;
+    overflow: hidden;
+    height: 160px;
+  }
+  .product-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .product-card:hover .product-img-container img {
+    transform: scale(1.12);
+  }
+  .discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #d43d3d;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    box-shadow: 0 3px 6px rgba(212,61,61,0.5);
+  }
+  .product-name {
+    padding: 12px 15px 6px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #222;
+    flex-grow: 1;
+    user-select: text;
+  }
+  .price-container {
+    padding: 0 15px 12px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .price-old {
+    text-decoration: line-through;
+    color: #888;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  .price-new {
+    font-weight: 700;
+    color: #d43d3d;
+  }
+  .btn-addcart {
+    margin: 0 15px 15px;
+    padding: 10px 0;
+    border: none;
+    background-color: #d43d3d;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 6px 10px rgb(212 61 61 / 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .btn-addcart:hover {
+    background-color: #a83030;
+    box-shadow: 0 9px 14px rgb(168 48 48 / 0.8);
+  }
+
+  /* Section Testimoni */
+  #testimoniSection {
+    background: #fff;
+    max-width: 900px;
+    margin: 0 auto 60px;
+    border-radius: 20px;
+    padding: 35px 25px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  #testimoniSection h2 {
+    text-align: center;
+    color: #d43d3d;
+    font-weight: 800;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+  }
+  #testimoniList {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+  }
+  #testimoniList::-webkit-scrollbar {
+    height: 8px;
+  }
+  #testimoniList::-webkit-scrollbar-thumb {
+    background: #d43d3d;
+    border-radius: 20px;
+  }
+  .testimoni-card {
+    min-width: 280px;
+    background: #f9f9f9;
+    border-radius: 15px;
+    padding: 20px 18px;
+    box-shadow: 0 3px 14px rgb(0 0 0 / 0.08);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+  }
+  .testimoni-card:hover {
+    transform: scale(1.07);
+    box-shadow: 0 9px 22px rgb(0 0 0 / 0.15);
+  }
+  .testimoni-card p {
+    font-style: italic;
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 12px;
+  }
+  .testimoni-author {
+    text-align: right;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #d43d3d;
+  }
+
+  /* Animasi gerak testimoni otomatis */
+  @keyframes slide-left {
+    0% { transform: translateX(0);}
+    100% { transform: translateX(-100%);}
+  }
+
+  /* Form Pesanan */
+  #orderFormSection {
+    max-width: 600px;
+    margin: 0 auto 70px;
+    background: white;
+    padding: 30px 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 26px rgb(0 0 0 / 0.12);
+    animation: fadeSlideIn 0.8s ease forwards;
+  }
+  #orderForm h2 {
+    text-align: center;
+    color: #d43d3d;
+    font-weight: 900;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+  }
+  #orderForm label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #444;
+  }
+  #orderForm input[type="text"],
+  #orderForm input[type="tel"],
+  #orderForm textarea,
+  #orderForm select,
+  #orderForm input[type="number"] {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 1rem;
+    border: 1.8px solid #d43d3d;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    transition: border-color 0.3s ease;
+  }
+  #orderForm input[type="text"]:focus,
+  #orderForm input[type="tel"]:focus,
+  #orderForm textarea:focus,
+  #orderForm select:focus,
+  #orderForm input[type="number"]:focus {
+    outline: none;
+    border-color: #a83030;
+    box-shadow: 0 0 8px #d43d3d;
+  }
+  #orderForm textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+  #orderForm button[type="submit"] {
+    background: #d43d3d;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgb(212 61 61 / 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  #orderForm button[type="submit"]:hover {
+    background: #a83030;
+    box-shadow: 0 12px 26px rgb(168 48 48 / 0.8);
+  }
+
+  /* Animasi masuk form */
+  @keyframes fadeSlideIn {
+    0% {opacity: 0; transform: translateY(25px);}
+    100% {opacity: 1; transform: translateY(0);}
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    #productGrid {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 18px;
+    }
+  }
+  @media (max-width: 768px) {
+    nav {
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: 95vw;
+      margin: 10px auto 15px;
+    }
+    #productGrid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+    #testimoniList {
+      gap: 15px;
+      padding-bottom: 6px;
+    }
+    .testimoni-card {
+      min-width: 220px;
+      padding: 18px 15px;
+      font-size: 0.9rem;
+    }
+    #orderFormSection {
+      max-width: 90vw;
+      padding: 25px 18px;
+    }
+    #orderForm button[type="submit"] {
+      font-size: 1rem;
+      padding: 12px 0;
+    }
+  }
+  @media (max-width: 450px) {
+    #productGrid {
+      grid-template-columns: 1fr;
+    }
+    .testimoni-card {
+      min-width: 100%;
+      font-size: 0.88rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="promoBanner" role="region" aria-label="Promo diskon 10 persen">
+  PROMO DISKON 10% SEMUA PRODUK! BELANJA HEMAT HARI INI
+</div>
+
+<header role="banner">
+  <div id="brand">Warung Mamah Cindy</div>
+  <div class="search-container" role="search">
+    <input type="search" id="searchInput" placeholder="Cari produk..." aria-label="Cari produk">
+  </div>
+</header>
+
+<nav role="navigation" aria-label="Filter kategori produk">
+  <button data-category="all" class="active" aria-pressed="true">Semua</button>
+  <button data-category="Sembako" aria-pressed="false">Sembako</button>
+  <button data-category="Minuman" aria-pressed="false">Minuman</button>
+  <button data-category="Snack" aria-pressed="false">Snack</button>
+  <button data-category="Kebersihan" aria-pressed="false">Kebersihan</button>
+</nav>
+
+<main>
+  <section id="productGrid" aria-live="polite" aria-label="Daftar produk"></section>
+
+  <section id="testimoniSection" aria-label="Testimoni pelanggan">
+    <h2>Testimoni Pelanggan</h2>
+    <div id="testimoniList" role="list" tabindex="0" aria-live="polite"></div>
+  </section>
+
+  <section id="orderFormSection" aria-labelledby="orderFormTitle">
+    <form id="orderForm" aria-describedby="orderFormDesc">
+      <h2 id="orderFormTitle">Form Pemesanan</h2>
+      <p id="orderFormDesc" style="text-align:center; margin-bottom: 20px; color: #555;">
+        Isi data dengan lengkap untuk proses pemesanan cepat dan mudah.
+      </p>
+      <label for="inputName">Nama Lengkap <span aria-hidden="true" style="color:#d43d3d;">*</span></label>
+      <input type="text" id="inputName" name="name" required aria-required="true" autocomplete="name" placeholder="Masukkan nama lengkap">
+
+      <label for="inputAddress">Alamat Lengkap <span aria-hidden="true" style="color:#d43d3d;">*</span></label>
+      <textarea id="inputAddress" name="address" required aria-required="true" rows="3" placeholder="Masukkan alamat lengkap"></textarea>
+
+      <label for="inputPhone">Nomor HP <span aria-hidden="true" style="color:#d43d3d;">*</span></label>
+      <input type="tel" id="inputPhone" name="phone" required aria-required="true" pattern="[0-9\s+]+" placeholder="Contoh: 081234567890">
+
+      <label for="inputNotes">Catatan / Pesan Khusus</label>
+      <textarea id="inputNotes" name="notes" rows="3" placeholder="Tambahkan catatan jika perlu"></textarea>
+
+      <button type="submit" aria-label="Kirim pesanan">Kirim Pesanan</button>
+    </form>
+  </section>
+</main>
+
+<!-- Script -->
+<script>
+  // Data produk dummy 100 item dengan kategori dan diskon 10%
+  const categories = ["Sembako", "Minuman", "Snack", "Kebersihan"];
+  const productNames = ["Beras", "Minyak Goreng", "Gula", "Teh Celup", "Kopi Bubuk", "Mie Instan", "Biskuit", "Sabun Mandi", "Detergen", "Air Mineral"];
+  const products = [];
+  for(let i=1; i<=100; i++) {
+    const category = categories[Math.floor(Math.random() * categories.length)];
+    const name = productNames[Math.floor(Math.random() * productNames.length)];
+    const basePrice = Math.floor(Math.random() * 70000) + 15000;
+    const discount = Math.round(basePrice * 0.1); // 10% diskon semua
+    const priceAfterDiscount = basePrice - discount;
+    const images = [
+      `https://source.unsplash.com/400x300/?${encodeURIComponent(name)},grocery,food,${i}`,
+      `https://source.unsplash.com/400x300/?${encodeURIComponent(name)},market,${i + 100}`,
+      `https://source.unsplash.com/400x300/?${encodeURIComponent(name)},store,${i + 200}`
+    ];
+    products.push({
+      id: i,
+      name: `${name} ${i}`,
+      category,
+      basePrice,
+      discount,
+      priceAfterDiscount,
+      images,
+    });
+  }
+
+  // Render produk
+  const productGrid = document.getElementById('productGrid');
+  function formatRupiah(num) {
+    return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+  function renderProducts(list) {
+    productGrid.innerHTML = '';
+    list.forEach(p => {
+      productGrid.insertAdjacentHTML('beforeend', `
+        <article class="product-card" role="group" aria-label="${p.name}, kategori ${p.category}">
+          <div class="product-img-container" tabindex="0" aria-label="Gambar produk ${p.name}">
+            <img src="${p.images[0]}" alt="${p.name} image 1" loading="lazy">
+          </div>
+          <div class="discount-badge" aria-live="polite">Diskon 10%</div>
+          <div class="product-name">${p.name}</div>
+          <div class="price-container">
+            <div class="price-old" aria-label="Harga asli">${formatRupiah(p.basePrice)}</div>
+            <div class="price-new" aria-label="Harga diskon">${formatRupiah(p.priceAfterDiscount)}</div>
+          </div>
+          <button class="btn-addcart" aria-label="Tambah ${p.name} ke keranjang">+ Keranjang</button>
+        </article>
+      `);
+    });
+  }
+
+  renderProducts(products);
+
+  // Filter kategori
+  const navButtons = document.querySelectorAll('nav button');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      const cat = btn.dataset.category;
+      if(cat === 'all') renderProducts(products);
+      else renderProducts(products.filter(p => p.category === cat));
+    });
+  });
+
+  // Search produk
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', () => {
+    const val = searchInput.value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(val));
+    renderProducts(filtered);
+  });
+
+  // Testimoni data & render
+  const testimonials = [
+    { name: "Budi", text: "Pelayanan sangat memuaskan dan barang selalu berkualitas!" },
+    { name: "Sari", text: "Harga terjangkau dan banyak pilihan produk." },
+    { name: "Andi", text: "Pengiriman cepat dan packaging rapi." },
+    { name: "Rina", text: "Belanja mudah dan customer service sangat ramah." },
+    { name: "Dewi", text: "Selalu belanja di Warung Mama Cindy, puas!" },
+    { name: "Joko", text: "Promo menarik dan sering ada diskon." },
+    { name: "Fitri", text: "Produk segar dan harga pas di kantong." },
+    { name: "Agus", text: "Website user friendly dan proses pembayaran cepat." },
+    { name: "Nina", text: "Rekomendasi banget buat belanja sembako online." },
+    { name: "Tono", text: "Pengalaman belanja yang menyenangkan dan aman." },
+  ];
+  const testimoniList = document.getElementById('testimoniList');
+
+  function renderTestimonials() {
+    testimoniList.innerHTML = '';
+    testimonials.forEach(t => {
+      testimoniList.insertAdjacentHTML('beforeend', `
+        <article class="testimoni-card" role="listitem" tabindex="0" aria-label="Testimoni dari ${t.name}">
+          <p>"${t.text}"</p>
+          <div class="testimoni-author">- ${t.name}</div>
+        </article>
+      `);
+    });
+  }
+  renderTestimonials();
+
+  // Testimoni slider otomatis
+  let currentTestiIndex = 0;
+  function slideTestimoni() {
+    const cardWidth = testimoniList.querySelector('.testimoni-card').offsetWidth + 24;
+    const scrollPos = currentTestiIndex * cardWidth;
+    testimoniList.scrollTo({left: scrollPos, behavior: 'smooth'});
+    currentTestiIndex = (currentTestiIndex + 1) % testimonials.length;
+  }
+  setInterval(slideTestimoni, 4500);
+
+  // Form Pesanan Kirim WA
+  const orderForm = document.getElementById('orderForm');
+  orderForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = orderForm.name.value.trim();
+    const address = orderForm.address.value.trim();
+    const phone = orderForm.phone.value.trim();
+    const notes = orderForm.notes.value.trim();
+    if(!name || !address || !phone) {
+      alert('Mohon isi semua kolom yang wajib dengan benar.');
+      return;
+    }
+    const message =
+      `Halo, saya ingin memesan dari Warung Mama Cindy:\n` +
+      `Nama: ${name}\nAlamat: ${address}\nNomor HP: ${phone}\nCatatan: ${notes || '-'}\n` +
+      `Terima kasih.`;
+
+    const waLink = `https://wa.me/6282112345678?text=${encodeURIComponent(message)}`;
+    window.open(waLink, '_blank');
+  });
+</script>
+
+</body>
+</html>
